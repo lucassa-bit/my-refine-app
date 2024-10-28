@@ -10,13 +10,10 @@ import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
 import { useAuth0 } from "@auth0/auth0-react";
 import routerBindings, {
-  CatchAllNavigate,
   DocumentTitleHandler,
   NavigateToResource,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
-import dataProvider from "@refinedev/simple-rest";
-import axios from "axios";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { Layout } from "./components/layout";
@@ -33,6 +30,7 @@ import {
   CategoryShow,
 } from "./pages/categories";
 import { Login } from "./pages/login";
+import { firebaseAuth, firestoreDatabase } from "./firebase/firebaseConfig";
 
 function App() {
   const { isLoading, user, logout, getIdTokenClaims } = useAuth0();
@@ -41,73 +39,15 @@ function App() {
     return <span>loading...</span>;
   }
 
-  const authProvider: AuthBindings = {
-    login: async () => {
-      return {
-        success: true,
-      };
-    },
-    logout: async () => {
-      logout({ returnTo: window.location.origin });
-      return {
-        success: true,
-      };
-    },
-    onError: async (error) => {
-      console.error(error);
-      return { error };
-    },
-    check: async () => {
-      try {
-        const token = await getIdTokenClaims();
-        if (token) {
-          axios.defaults.headers.common = {
-            Authorization: `Bearer ${token.__raw}`,
-          };
-          return {
-            authenticated: true,
-          };
-        } else {
-          return {
-            authenticated: false,
-            error: {
-              message: "Check failed",
-              name: "Token not found",
-            },
-            redirectTo: "/login",
-            logout: true,
-          };
-        }
-      } catch (error: any) {
-        return {
-          authenticated: false,
-          error: new Error(error),
-          redirectTo: "/login",
-          logout: true,
-        };
-      }
-    },
-    getPermissions: async () => null,
-    getIdentity: async () => {
-      if (user) {
-        return {
-          ...user,
-          avatar: user.picture,
-        };
-      }
-      return null;
-    },
-  };
-
   return (
     <BrowserRouter>
       <GitHubBanner />
       <RefineKbarProvider>
         <DevtoolsProvider>
           <Refine
-            dataProvider={dataProvider("https://api.fake-rest.refine.dev")}
+            dataProvider={firestoreDatabase.getDataProvider()}
             routerProvider={routerBindings}
-            authProvider={authProvider}
+            authProvider={firebaseAuth.getAuthProvider()}
             resources={[
               {
                 name: "blog_posts",
@@ -140,14 +80,9 @@ function App() {
             <Routes>
               <Route
                 element={
-                  <Authenticated
-                    key="authenticated-inner"
-                    fallback={<CatchAllNavigate to="/login" />}
-                  >
-                    <Layout>
-                      <Outlet />
-                    </Layout>
-                  </Authenticated>
+                  <Layout>
+                    <Outlet />
+                  </Layout>
                 }
               >
                 <Route

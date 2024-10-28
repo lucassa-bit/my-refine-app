@@ -47,16 +47,6 @@ export const BlogPostList = () => {
         header: "Status",
       },
       {
-        id: "createdAt",
-        accessorKey: "createdAt",
-        header: "Created At",
-        cell: function render({ getValue }) {
-          return new Date(getValue<any>()).toLocaleString(undefined, {
-            timeZone: "UTC",
-          });
-        },
-      },
-      {
         id: "actions",
         accessorKey: "id",
         header: "Actions",
