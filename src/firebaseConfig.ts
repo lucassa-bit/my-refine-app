@@ -1,6 +1,10 @@
 // Import the functions you need from the SDKs you need
-import exp from "constants";
-import {initializeFirebase, FirestoreDatabase, FirebaseAuth} from "./index";
+import {
+  initializeFirebase,
+  FirestoreDatabase,
+  FirebaseAuth,
+} from "firebase-refine";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -12,8 +16,9 @@ const firebaseConfig = {
   projectId: "teste-template-crud",
   storageBucket: "teste-template-crud.appspot.com",
   messagingSenderId: "647140289416",
-  appId: "1:647140289416:web:6510141f47b8d1e1b8a83d"
+  appId: "1:647140289416:web:6510141f47b8d1e1b8a83d",
 };
+
 
 // Initialize Firebase
 export const initApp = initializeFirebase(firebaseConfig);

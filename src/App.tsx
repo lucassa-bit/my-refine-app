@@ -1,5 +1,4 @@
 import {
-  AuthBindings,
   Authenticated,
   ErrorComponent,
   GitHubBanner,
@@ -8,7 +7,6 @@ import {
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
-import { useAuth0 } from "@auth0/auth0-react";
 import routerBindings, {
   DocumentTitleHandler,
   NavigateToResource,
@@ -30,15 +28,9 @@ import {
   CategoryShow,
 } from "./pages/categories";
 import { Login } from "./pages/login";
-import { firebaseAuth, firestoreDatabase } from "./firebase/firebaseConfig";
+import { firebaseAuth, firestoreDatabase } from "./firebaseConfig";
 
 function App() {
-  const { isLoading, user, logout, getIdTokenClaims } = useAuth0();
-
-  if (isLoading) {
-    return <span>loading...</span>;
-  }
-
   return (
     <BrowserRouter>
       <GitHubBanner />
